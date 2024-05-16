@@ -72,212 +72,212 @@ int main(void) {
   salir();
   printf("==== FIN DEL PROGRAMA ====.\n");
   return 0;
+}
+
+/* ======================= MENUS ==================== */
 
 
-  /* ======================= MENUS ==================== */
+void menuPrincipal() {
+  printf("\n\n*** CONSULTORIO VIDA SANA *** \n1. Citas.\n2. Mantenimiento.\n3. Reportes.\n4. Salir.\n\nEscriba su seleccion: ");
+}
+
+void subMenuCitas() {
+  printf("\n\n-- CITAS -- \n1. Agregar cita.\n2. Cancelar cita.\n3. Retroceder.\n\nEscriba su seleccion: ");
+}
+
+void subMenuMantenimiento(){
+  printf("\n\n-- MANTENIMIENTO -- \n1. Agregar paciente.\n2. Borrar paciente.\n3. Actualizar paciente.\n4. Consultar paciente.\n5. Retroceder.\n\nEscriba su seleccion: ");
+}
+
+void subMenuReportes(){
+  printf("\n\n-- REPORTES -- \n1. Por dia.\n2. Por semana.\n3. Por mes.\n4. Retroceder.\n\nEscriba su seleccion: ");
+}
 
 
-  void menuPrincipal() {
-    printf("\n\n*** CONSULTORIO VIDA SANA *** \n1. Citas.\n2. Mantenimiento.\n3. Reportes.\n4. Salir.\n\nEscriba su seleccion: ");
-  }
-
-  void subMenuCitas() {
-    printf("\n\n-- CITAS -- \n1. Agregar cita.\n2. Cancelar cita.\n3. Retroceder.\n\nEscriba su seleccion: ");
-  }
-
-  void subMenuMantenimiento(){
-    printf("\n\n-- MANTENIMIENTO -- \n1. Agregar paciente.\n2. Borrar paciente.\n3. Actualizar paciente.\n4. Consultar paciente.\n5. Retroceder.\n\nEscriba su seleccion: ");
-  }
-
-  void subMenuReportes(){
-    printf("\n\n-- REPORTES -- \n1. Por dia.\n2. Por semana.\n3. Por mes.\n4. Retroceder.\n\nEscriba su seleccion: ");
-  }
+/* ======================= CITAS ==================== */
 
 
-  /* ======================= CITAS ==================== */
+void citas(){
+  int opcion;
+  subMenuCitas();
+  scanf("%d", &opcion);
 
-
-  void citas(){
-    int opcion;
+  while (opcion != 3) {
+    switch (opcion) {
+      case 1:
+        agregarCita();
+        break;
+      case 2:
+        cancelarCita();
+        break;
+      default:
+        printf("Opcion no disponible.\n");
+    }
     subMenuCitas();
     scanf("%d", &opcion);
+  }
+}
 
-    while (opcion != 3) {
-      switch (opcion) {
-        case 1:
-          agregarCita();
-          break;
-        case 2:
-          cancelarCita();
-          break;
-        default:
-          printf("Opcion no disponible.\n");
+void agregarCita(){
+  if (numCitas >= MAX_CITAS) {
+    printf("No se pueden agregar más citas. Se ha alcanzado el límite máximo.\n");
+    return;
+  }
+  struct Cita nuevaCita;
+  printf("\n--- AGREGAR CITA ---\n");
+  printf("Ingrese el número de cita: ");
+  scanf("%d", &nuevaCita.numeroCita);
+  printf("Ingrese la fecha de la cita (DD/MM/AAAA): ");
+  scanf("%s", nuevaCita.fecha);
+  printf("Ingrese la hora de la cita (HH:MM): ");
+  scanf("%s", nuevaCita.hora);
+  printf("Ingrese el nombre completo del paciente: ");
+  getchar(); // Limpiar el buffer de entrada
+  fgets(nuevaCita.nombrePaciente, sizeof(nuevaCita.nombrePaciente), stdin);
+  nuevaCita.nombrePaciente[strcspn(nuevaCita.nombrePaciente, "\n")] = '\0';
+
+  citas[numCitas++] = nuevaCita;
+  printf("Cita agregada exitosamente.\n");
+}
+
+void cancelarCita(){
+  if (numCitas == 0) {
+    printf("No hay citas para cancelar.\n");
+    return;
+  }
+  int numCita;
+  printf("\n--- CANCELAR CITA ---\n");
+  printf("Ingrese el número de cita a cancelar: ");
+  scanf("%d", &numCita);
+
+  int encontrado = 0;
+  for (int i = 0; i < numCitas; i++) {
+    if (citas[i].numeroCita == numCita) {
+      for (int j = i; j < numCitas - 1; j++) {
+          citas[j] = citas[j + 1];
       }
-      subMenuCitas();
-      scanf("%d", &opcion);
+      encontrado = 1;
+      numCitas--;
+      printf("Cita cancelada exitosamente.\n");
+      break;
     }
   }
-
-  void agregarCita(){
-    if (numCitas >= MAX_CITAS) {
-      printf("No se pueden agregar más citas. Se ha alcanzado el límite máximo.\n");
-      return;
-    }
-    struct Cita nuevaCita;
-    printf("\n--- AGREGAR CITA ---\n");
-    printf("Ingrese el número de cita: ");
-    scanf("%d", &nuevaCita.numeroCita);
-    printf("Ingrese la fecha de la cita (DD/MM/AAAA): ");
-    scanf("%s", nuevaCita.fecha);
-    printf("Ingrese la hora de la cita (HH:MM): ");
-    scanf("%s", nuevaCita.hora);
-    printf("Ingrese el nombre completo del paciente: ");
-    getchar(); // Limpiar el buffer de entrada
-    fgets(nuevaCita.nombrePaciente, sizeof(nuevaCita.nombrePaciente), stdin);
-    nuevaCita.nombrePaciente[strcspn(nuevaCita.nombrePaciente, "\n")] = '\0';
-
-    citas[numCitas++] = nuevaCita;
-    printf("Cita agregada exitosamente.\n");
+  if (!encontrado) {
+    printf("No se encontró ninguna cita con ese número.\n");
   }
+}
 
-  void cancelarCita(){
-    if (numCitas == 0) {
-      printf("No hay citas para cancelar.\n");
-      return;
-    }
-    int numCita;
-    printf("\n--- CANCELAR CITA ---\n");
-    printf("Ingrese el número de cita a cancelar: ");
-    scanf("%d", &numCita);
 
-    int encontrado = 0;
-    for (int i = 0; i < numCitas; i++) {
-      if (citas[i].numeroCita == numCita) {
-        for (int j = i; j < numCitas - 1; j++) {
-            citas[j] = citas[j + 1];
-        }
-        encontrado = 1;
-        numCitas--;
-        printf("Cita cancelada exitosamente.\n");
+/* ======================= MANTENIMIENTO ==================== */
+
+void mantenimiento() {
+  int opcion;
+  subMenuMantenimiento();
+  scanf("%d", &opcion);
+
+  while (opcion != 5) {
+    switch (opcion) {
+      case 1:
+        agregarPaciente();
         break;
-      }
+      case 2:
+        borrarPaciente();
+        break;
+      case 3:
+        actualizarPaciente();
+        break;
+      case 4:
+        consultarPaciente();
+        break;
+      default:
+        printf("Opcion no disponible.\n");
     }
-    if (!encontrado) {
-      printf("No se encontró ninguna cita con ese número.\n");
-    }
-  }
-
-
-  /* ======================= MANTENIMIENTO ==================== */
-
-  void mantenimiento() {
-    int opcion;
     subMenuMantenimiento();
     scanf("%d", &opcion);
-
-    while (opcion != 5) {
-      switch (opcion) {
-        case 1:
-          agregarPaciente();
-          break;
-        case 2:
-          borrarPaciente();
-          break;
-        case 3:
-          actualizarPaciente();
-          break;
-        case 4:
-          consultarPaciente();
-          break;
-        default:
-          printf("Opcion no disponible.\n");
-      }
-      subMenuMantenimiento();
-      scanf("%d", &opcion);
-    }
   }
+}
 
-  void agregarPaciente(){
-  }
+void agregarPaciente(){
+}
 
-  void borrarPaciente(){
-
-  }
-
-  void actualizarPaciente() {
-
-  }
-
-  void consultarPaciente() {
-
-  }
-
-
-  /* ======================= REPORTES ==================== */
-
-  void reportes() {
-    int opcion;
-    subMenuReportes();
-    scanf("%d", &opcion);
-
-    while (opcion != 4) {
-      switch (opcion) {
-        case 1:
-          reporteDiario();
-          break;
-        case 2:
-          reporteSemana();
-          break;
-        case 3:
-          reporteMes();
-          break;
-        default:
-          printf("Opcion no disponible.\n");
-      }
-      subMenuReportes();
-      scanf("%d", &opcion);
-    }
-  }
-
-  void reporteDiario() {
-    printf("\n--- REPORTE DIARIO ---\n");
-    // Ordenar las citas por fecha y hora
-    for (int i = 0; i < numCitas - 1; i++) {
-      for (int j = 0; j < numCitas - i - 1; j++) {
-        // Convertir las fechas y horas a números enteros para compararlas
-        int fecha1, hora1, fecha2, hora2;
-        sscanf(citas[j].fecha, "%d", &fecha1);
-        sscanf(citas[j].hora, "%d", &hora1);
-        sscanf(citas[j + 1].fecha, "%d", &fecha2);
-        sscanf(citas[j + 1].hora, "%d", &hora2);
-
-        // Comparar las fechas y horas y hacer el intercambio si es necesario
-        if (fecha1 > fecha2 || (fecha1 == fecha2 && hora1 > hora2)) {
-          struct Cita temp = citas[j];
-          citas[j] = citas[j + 1];
-          citas[j + 1] = temp;
-        }
-      }
-    }
-
-    // Imprimir las citas ordenadas
-    for (int i = 0; i < numCitas; i++) {
-      printf("%s  %s  %s\n", citas[i].fecha, citas[i].hora, citas[i].nombrePaciente);
-    }
-  }
-
-  void reporteSemana() {
-    printf("\n--- REPORTE SEMANAL ---\n");
-    // Aquí puedes agregar la lógica para generar el reporte semanal de citas
-  }
-
-  void reporteMes() {
-    printf("\n--- REPORTE MENSUAL ---\n");
-    // Aquí puedes agregar la lógica para generar el reporte mensual de citas
-  }
-
-  void salir(){
-    printf("DATOS GUARDADOS.\n");
-  }
+void borrarPaciente(){
 
 }
+
+void actualizarPaciente() {
+
+}
+
+void consultarPaciente() {
+
+}
+
+
+/* ======================= REPORTES ==================== */
+
+void reportes() {
+  int opcion;
+  subMenuReportes();
+  scanf("%d", &opcion);
+
+  while (opcion != 4) {
+    switch (opcion) {
+      case 1:
+        reporteDiario();
+        break;
+      case 2:
+        reporteSemana();
+        break;
+      case 3:
+        reporteMes();
+        break;
+      default:
+        printf("Opcion no disponible.\n");
+    }
+    subMenuReportes();
+    scanf("%d", &opcion);
+  }
+}
+
+void reporteDiario() {
+  printf("\n--- REPORTE DIARIO ---\n");
+  // Ordenar las citas por fecha y hora
+  for (int i = 0; i < numCitas - 1; i++) {
+    for (int j = 0; j < numCitas - i - 1; j++) {
+      // Convertir las fechas y horas a números enteros para compararlas
+      int fecha1, hora1, fecha2, hora2;
+      sscanf(citas[j].fecha, "%d", &fecha1);
+      sscanf(citas[j].hora, "%d", &hora1);
+      sscanf(citas[j + 1].fecha, "%d", &fecha2);
+      sscanf(citas[j + 1].hora, "%d", &hora2);
+
+      // Comparar las fechas y horas y hacer el intercambio si es necesario
+      if (fecha1 > fecha2 || (fecha1 == fecha2 && hora1 > hora2)) {
+        struct Cita temp = citas[j];
+        citas[j] = citas[j + 1];
+        citas[j + 1] = temp;
+      }
+    }
+  }
+
+  // Imprimir las citas ordenadas
+  for (int i = 0; i < numCitas; i++) {
+    printf("%s  %s  %s\n", citas[i].fecha, citas[i].hora, citas[i].nombrePaciente);
+  }
+}
+
+void reporteSemana() {
+  printf("\n--- REPORTE SEMANAL ---\n");
+  // Aquí puedes agregar la lógica para generar el reporte semanal de citas
+}
+
+void reporteMes() {
+  printf("\n--- REPORTE MENSUAL ---\n");
+  // Aquí puedes agregar la lógica para generar el reporte mensual de citas
+}
+
+void salir(){
+  printf("DATOS GUARDADOS.\n");
+}
+
+
