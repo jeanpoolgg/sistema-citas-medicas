@@ -2,6 +2,7 @@
 #include <string.h>
 
 #define MAX_PACIENTES 100
+#define MAX_CITAS 100
 
 struct Paciente {
   char seguroSocial[20];
@@ -12,8 +13,17 @@ struct Paciente {
   char telefono[15];
 };
 
+struct Cita {
+    int numeroCita;
+    char fecha[11]; // Formato DD/MM/AAAA
+    char hora[6];    // Formato HH:MM
+    char nombrePaciente[100];
+};
+
 struct Paciente pacientes[MAX_PACIENTES];
+struct Cita citas[MAX_CITAS];
 int numPacientes = 0;
+int numCitas = 0;
 
 void menuPrincipal();
 
@@ -112,11 +122,52 @@ int main(void)
   }
 
   void agregarCita(){
+    if (numCitas >= MAX_CITAS) {
+    printf("No se pueden agregar más citas. Se ha alcanzado el límite máximo.\n");
+    return;
+    }
+    struct Cita nuevaCita;
+    printf("\n--- AGREGAR CITA ---\n");
+    printf("Ingrese el número de cita: ");
+    scanf("%d", &nuevaCita.numeroCita);
+    printf("Ingrese la fecha de la cita (DD/MM/AAAA): ");
+    scanf("%s", nuevaCita.fecha);
+    printf("Ingrese la hora de la cita (HH:MM): ");
+    scanf("%s", nuevaCita.hora);
+    printf("Ingrese el nombre completo del paciente: ");
+    getchar(); // Limpiar el buffer de entrada
+    fgets(nuevaCita.nombrePaciente, sizeof(nuevaCita.nombrePaciente), stdin);
+    nuevaCita.nombrePaciente[strcspn(nuevaCita.nombrePaciente, "\n")] = '\0';
 
+    citas[numCitas++] = nuevaCita;
+    printf("Cita agregada exitosamente.\n");
   }
 
   void cancelarCita(){
+    if (numCitas == 0) {
+        printf("No hay citas para cancelar.\n");
+        return;
+    }
+    int numCita;
+    printf("\n--- CANCELAR CITA ---\n");
+    printf("Ingrese el número de cita a cancelar: ");
+    scanf("%d", &numCita);
 
+    int encontrado = 0;
+    for (int i = 0; i < numCitas; i++) {
+        if (citas[i].numeroCita == numCita) {
+            for (int j = i; j < numCitas - 1; j++) {
+                citas[j] = citas[j + 1];
+            }
+            encontrado = 1;
+            numCitas--;
+            printf("Cita cancelada exitosamente.\n");
+            break;
+        }
+    }
+    if (!encontrado) {
+        printf("No se encontró ninguna cita con ese número.\n");
+    }
   }
 
 
