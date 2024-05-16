@@ -240,7 +240,30 @@ int main(void) {
   }
 
   void reporteDiario() {
+    printf("\n--- REPORTE DIARIO ---\n");
+    // Ordenar las citas por fecha y hora
+    for (int i = 0; i < numCitas - 1; i++) {
+      for (int j = 0; j < numCitas - i - 1; j++) {
+        // Convertir las fechas y horas a números enteros para compararlas
+        int fecha1, hora1, fecha2, hora2;
+        sscanf(citas[j].fecha, "%d", &fecha1);
+        sscanf(citas[j].hora, "%d", &hora1);
+        sscanf(citas[j + 1].fecha, "%d", &fecha2);
+        sscanf(citas[j + 1].hora, "%d", &hora2);
 
+        // Comparar las fechas y horas y hacer el intercambio si es necesario
+        if (fecha1 > fecha2 || (fecha1 == fecha2 && hora1 > hora2)) {
+          struct Cita temp = citas[j];
+          citas[j] = citas[j + 1];
+          citas[j + 1] = temp;
+        }
+      }
+    }
+
+    // Imprimir las citas ordenadas
+    for (int i = 0; i < numCitas; i++) {
+      printf("%s  %s  %s\n", citas[i].fecha, citas[i].hora, citas[i].nombrePaciente);
+    }
   }
 
   void reporteSemana() {
