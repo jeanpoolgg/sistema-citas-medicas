@@ -32,7 +32,7 @@ void subMenuMantenimiento();
 void subMenuReportes();
 void salir();
 
-void citas();
+void citar();
 void agregarCita();
 void cancelarCita();
 
@@ -55,7 +55,7 @@ int main(void) {
   while (opcion != 4) {
     switch (opcion) {
       case 1:
-        citas();
+        citar();
         break;
       case 2:
         mantenimiento();
@@ -97,7 +97,7 @@ void subMenuReportes(){
 /* ======================= CITAS ==================== */
 
 
-void citas(){
+void citar(){
   int opcion;
   subMenuCitas();
   scanf("%d", &opcion);
