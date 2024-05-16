@@ -47,34 +47,31 @@ void reporteDiario();
 void reporteSemana();
 void reporteMes();
 
-int main(void)
-{
-  int main(void) {
-    int opcion;
+int main(void) {
+  int opcion;
+  menuPrincipal();
+  scanf("%d", &opcion);
+
+  while (opcion != 4) {
+    switch (opcion) {
+      case 1:
+        citas();
+        break;
+      case 2:
+        mantenimiento();
+        break;
+      case 3:
+        reportes();
+        break;
+      default:
+        printf("Opcion no disponible.\n");
+    }
     menuPrincipal();
     scanf("%d", &opcion);
-
-    while (opcion != 4) {
-      switch (opcion) {
-        case 1:
-          citas();
-          break;
-        case 2:
-          mantenimiento();
-          break;
-        case 3:
-          reportes();
-          break;
-        default:
-          printf("Opcion no disponible.\n");
-      }
-      menuPrincipal();
-      scanf("%d", &opcion);
-    }
-    salir();
-    printf("==== FIN DEL PROGRAMA ====.\n");
-    return 0;
   }
+  salir();
+  printf("==== FIN DEL PROGRAMA ====.\n");
+  return 0;
 
 
   /* ======================= MENUS ==================== */
@@ -123,8 +120,8 @@ int main(void)
 
   void agregarCita(){
     if (numCitas >= MAX_CITAS) {
-    printf("No se pueden agregar más citas. Se ha alcanzado el límite máximo.\n");
-    return;
+      printf("No se pueden agregar más citas. Se ha alcanzado el límite máximo.\n");
+      return;
     }
     struct Cita nuevaCita;
     printf("\n--- AGREGAR CITA ---\n");
@@ -145,8 +142,8 @@ int main(void)
 
   void cancelarCita(){
     if (numCitas == 0) {
-        printf("No hay citas para cancelar.\n");
-        return;
+      printf("No hay citas para cancelar.\n");
+      return;
     }
     int numCita;
     printf("\n--- CANCELAR CITA ---\n");
@@ -155,18 +152,18 @@ int main(void)
 
     int encontrado = 0;
     for (int i = 0; i < numCitas; i++) {
-        if (citas[i].numeroCita == numCita) {
-            for (int j = i; j < numCitas - 1; j++) {
-                citas[j] = citas[j + 1];
-            }
-            encontrado = 1;
-            numCitas--;
-            printf("Cita cancelada exitosamente.\n");
-            break;
+      if (citas[i].numeroCita == numCita) {
+        for (int j = i; j < numCitas - 1; j++) {
+            citas[j] = citas[j + 1];
         }
+        encontrado = 1;
+        numCitas--;
+        printf("Cita cancelada exitosamente.\n");
+        break;
+      }
     }
     if (!encontrado) {
-        printf("No se encontró ninguna cita con ese número.\n");
+      printf("No se encontró ninguna cita con ese número.\n");
     }
   }
 
@@ -218,8 +215,6 @@ int main(void)
 
   /* ======================= REPORTES ==================== */
 
-
-
   void reportes() {
     int opcion;
     subMenuReportes();
@@ -247,16 +242,19 @@ int main(void)
   void reporteDiario() {
 
   }
+
   void reporteSemana() {
-
+    printf("\n--- REPORTE SEMANAL ---\n");
+    // Aquí puedes agregar la lógica para generar el reporte semanal de citas
   }
-  void reporteMes() {
 
+  void reporteMes() {
+    printf("\n--- REPORTE MENSUAL ---\n");
+    // Aquí puedes agregar la lógica para generar el reporte mensual de citas
   }
 
   void salir(){
     printf("DATOS GUARDADOS.\n");
   }
-
 
 }
